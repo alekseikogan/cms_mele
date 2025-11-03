@@ -19,7 +19,7 @@ ADMINS = [
     ('Alex K', 'alex@mydomain.com'),
 ]
 
-ALLOWED_HOSTS = ['educaproject.com', 'www.educaproject.com']
+ALLOWED_HOSTS = ['.educaproject.com']
 
 
 # Application definition
