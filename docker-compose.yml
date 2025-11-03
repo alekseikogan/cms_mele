@@ -3,8 +3,7 @@ services:
   web:
     build: .
     command: ["./wait-for-it.sh", "db:5432", "--",
-              "python", "/code/educa/manage.py", "runserver",
-              "0.0.0.0:8000"]
+              "uwsgi", "--ini", "/code/config/uwsgi/uwsgi.ini"]
     restart: always
     volumes:
       - .:/code
@@ -17,6 +16,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     depends_on:
       - db
+      - cache
 
   db:
     image: postgres:14.5
@@ -27,3 +27,19 @@ services:
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+  
+  cache:
+    image: redis:7.0.4
+    restart: always
+    volumes:
+      - ./data/cache:/data
+
+  
+  nginx:
+    image: nginx:1.23.1
+    restart: always
+    volumes:
+      - ./config/nginx:/etc/nginx/templates
+      - .:/code
+    ports:
+      - "80:80"
